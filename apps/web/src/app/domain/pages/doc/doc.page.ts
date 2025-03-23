@@ -1,5 +1,4 @@
-import { DynamicAnchorComponent, Topic } from '@zard/domain/components/dynamic-anchor/dynamic-anchor.component';
-import { ZardCodeBoxComponent } from '@zard/widget/components/zard-code-box/zard-code-box.component';
+import { DynamicAnchorComponent } from '@zard/domain/components/dynamic-anchor/dynamic-anchor.component';
 import { ZardMarkdownComponent } from '@zard/domain/components/markdown/markdown.component';
 import { SidebarComponent } from '@zard/domain/components/sidebar/sidebar.component';
 import { DocData, DOCS } from '@zard/shared/constants/docs.constant';
@@ -15,18 +14,26 @@ import { ScrollSpyDirective } from '../../directives/scroll-spy.directive';
   selector: 'z-documentation',
   templateUrl: './doc.page.html',
   standalone: true,
-  imports: [CommonModule, DynamicAnchorComponent, MarkdownModule, ZardCodeBoxComponent, ScrollSpyDirective, ScrollSpyItemDirective, SidebarComponent, ZardMarkdownComponent],
+  imports: [
+    CommonModule,
+    DynamicAnchorComponent,
+    MarkdownModule,
+    ScrollSpyDirective,
+    ScrollSpyItemDirective,
+    SidebarComponent,
+    ZardMarkdownComponent,
+  ],
 })
 export class DocPage {
-  activeAnchor?: string;
-  docData?: DocData;
+  public activeAnchor?: string;
+  public docData?: DocData;
 
-  constructor(
+  public constructor(
     private activatedRoute: ActivatedRoute,
     private router: Router,
-    private viewportScroller: ViewportScroller,
+    private viewportScroller: ViewportScroller
   ) {
-    this.activatedRoute.params.subscribe(_ => {
+    this.activatedRoute.params.subscribe(() => {
       this.loadData();
     });
     this.loadData();
