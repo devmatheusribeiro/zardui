@@ -24,6 +24,7 @@ import { ZardDemoRadioSizeComponent } from '@zard/components/radio/demo/size';
 import { ZardDemoSwitchBasicComponent } from '@zard/components/switch/demo/basic';
 import { ZardDemoSwitchDisabledComponent } from '@zard/components/switch/demo/disabled';
 import { ZardDemoSwitchSizeComponent } from '@zard/components/switch/demo/size';
+import { ZardDemoDialogBasicComponent } from '@zard/components/dialog/demo/basic';
 
 export interface ComponentData {
   componentName: string;
@@ -174,6 +175,15 @@ export const COMPONENTS: ComponentData[] = [
       {
         name: 'disabled',
         component: ZardDemoSwitchDisabledComponent,
+      },
+    ],
+  },
+  {
+    componentName: 'dialog',
+    examples: [
+      {
+        name: 'basic',
+        component: ZardDemoDialogBasicComponent,
       },
     ],
   },
