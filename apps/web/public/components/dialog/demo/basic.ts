@@ -45,7 +45,8 @@ export class CustomDialogComponent {
   standalone: true,
   imports: [ZardButtonComponent],
   template: `
-    <button z-button (click)="openDialog()">Open Dialog</button>
+    <button z-button (click)="openDialogWithConfig()">Open Dialog With Config</button>
+    <button z-button (click)="openDialogWithCustomComponent()">Open Dialog With Custom Component</button>
 
     <div class="mt-6">User name: {{ userResponse() }}</div>
   `,
@@ -55,11 +56,39 @@ export class ZardDemoDialogBasicComponent {
 
   userResponse = signal('');
 
-  openDialog() {
+  openDialogWithCustomComponent() {
+    this.dialog.openCustomDialog(CustomDialogComponent).afterClosed.subscribe({
+      next: value => {
+        this.userResponse.set(value as string);
+      },
+    });
+  }
+
+  openDialogWithConfig() {
     this.dialog
-      .openDialog(CustomDialogComponent)
-      .afterClosed()
-      .subscribe({
+      .openCustomDialog({
+        title: 'My Title',
+        description: 'My description',
+        content: 'This is my contentt. It can be a string, a component or a template',
+        closeable: true,
+        footer: [
+          {
+            label: 'Cancel',
+            type: 'secondary',
+            onClick: (instance: any) => {
+              console.log('cancel', instance);
+            },
+          },
+          {
+            label: 'Ok',
+            type: 'default',
+            onClick: (instance: any) => {
+              console.log('ok', instance);
+            },
+          },
+        ],
+      })
+      .afterClosed.subscribe({
         next: value => {
           this.userResponse.set(value as string);
         },

@@ -10,8 +10,11 @@ import {
   inject,
   Injector,
   input,
+  signal,
+  TemplateRef,
   Type,
   ViewEncapsulation,
+  ɵComponentType,
 } from '@angular/core';
 import { mergeClasses } from '../../shared/utils/utils';
 import {
@@ -25,12 +28,39 @@ import {
   dialogBackdropVariants,
 } from './dialog.variants';
 import { Injectable } from '@angular/core';
-import { DOCUMENT } from '@angular/common';
-import { Subject } from 'rxjs';
+import { CommonModule, DOCUMENT } from '@angular/common';
+import { Observable, Subject } from 'rxjs';
 import { ClassValue } from 'clsx';
+import { ZardButtonVariants } from '../button/button.variants';
+import { ZardDialogModule } from './dialog.module';
+import { ZardButtonComponent, ZardInputDirective } from '../components';
+import { FormsModule } from '@angular/forms';
+
+export interface DialogReturn {
+  afterClosed: Observable<unknown>;
+}
 
 export abstract class DialogRef {
   abstract close(value?: unknown): void;
+}
+
+export abstract class DialogData {
+  [key: string]: any;
+}
+
+interface DialogFooterAction {
+  label: string;
+  onClick: (componentInstance: any) => void;
+  type?: ZardButtonVariants['zType'];
+}
+
+export abstract class DialogConfig {
+  title?: string;
+  description?: string;
+  data?: DialogData;
+  content?: string | Type<unknown> | TemplateRef<unknown>;
+  footer?: DialogFooterAction[];
+  closeable?: boolean;
 }
 
 function createDialogContainer(_document: Document) {
@@ -61,7 +91,15 @@ export class DialogService {
   environmentInjector = inject(EnvironmentInjector);
   document = inject(DOCUMENT);
 
-  openDialog<T>(component: Type<T>) {
+  openCustomDialog<T>(componentOrConfig: any): DialogReturn {
+    if (typeof componentOrConfig === 'object') {
+      return this.openDialog(ZardBaseDialogComponent, componentOrConfig);
+    }
+
+    return this.openDialog(componentOrConfig);
+  }
+
+  private openDialog<T>(component: Type<T>, config: DialogConfig = {}): DialogReturn {
     const container = createDialogContainer(this.document);
     this.document.body.appendChild(container);
 
@@ -86,6 +124,14 @@ export class DialogService {
           provide: DialogRef,
           useValue: dialogRef,
         },
+        {
+          provide: DialogData,
+          useValue: config.data,
+        },
+        {
+          provide: DialogConfig,
+          useValue: config,
+        },
       ],
     });
 
@@ -106,8 +152,61 @@ export class DialogService {
     this.applicationRef.attachView(componentRef.hostView);
 
     return {
-      afterClosed: () => afterClosed$.asObservable(),
+      afterClosed: afterClosed$.asObservable(),
     };
+  }
+}
+
+@Component({
+  selector: 'zard-base-dialog',
+  imports: [ZardDialogModule, ZardButtonComponent, CommonModule],
+  template: `
+    <z-dialog>
+      @if (dialogConfig.title || dialogConfig.description) {
+        <z-dialog-header>
+          @if (dialogConfig.title) {
+            <z-dialog-header-title> {{ dialogConfig.title }}</z-dialog-header-title>
+          }
+
+          @if (dialogConfig.description) {
+            <z-dialog-header-description> {{ dialogConfig.description }}</z-dialog-header-description>
+          }
+        </z-dialog-header>
+      }
+
+      <z-dialog-body>
+        @if (isNgTemplateContent()) {
+          <ng-container *ngTemplateOutlet="content()"></ng-container>
+        } @else if (isStringContent()) {
+          <span [innerHTML]="content()"></span>
+        } @else {
+          <ng-container *ngComponentOutlet="content()"></ng-container>
+        }
+      </z-dialog-body>
+
+      @if (dialogConfig.footer) {
+        <z-dialog-footer>
+          @for (item of dialogConfig.footer; track item) {
+            <z-button type="button" [zType]="item.type" (click)="item.onClick(this)">{{ item.label }}</z-button>
+          }
+        </z-dialog-footer>
+      }
+    </z-dialog>
+  `,
+})
+export class ZardBaseDialogComponent {
+  dialogRef = inject(DialogRef);
+  dialogData = inject(DialogData);
+  dialogConfig = inject(DialogConfig);
+
+  content = signal<any>(this.dialogConfig.content);
+
+  isNgTemplateContent() {
+    return this.dialogConfig.content instanceof TemplateRef;
+  }
+
+  isStringContent() {
+    return typeof this.dialogConfig.content === 'string';
   }
 }
 
