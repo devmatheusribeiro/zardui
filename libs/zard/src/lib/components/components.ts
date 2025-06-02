@@ -13,3 +13,8 @@ export * from './dropdown/dropdown-item.component';
 export * from './radio/radio.component';
 export * from './switch/switch.component';
 export * from './tabs/tabs.component';
+export * from './carousel/carousel.component';
+export * from './carousel/carousel-content.component';
+export * from './carousel/carousel-item.component';
+export * from './carousel/carousel-extensions.component';
+export * from './carousel/carousel-plugins.service';
