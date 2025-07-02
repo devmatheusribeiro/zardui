@@ -1,12 +1,13 @@
-import { provideMarkdown } from 'ngx-markdown';
+import { MARKED_OPTIONS, provideMarkdown } from 'ngx-markdown';
 
 import { HttpClient, provideHttpClient } from '@angular/common/http';
-import { ApplicationConfig, importProvidersFrom, provideAppInitializer, provideZoneChangeDetection } from '@angular/core';
+import { ApplicationConfig, importProvidersFrom, provideAppInitializer, provideZoneChangeDetection, SecurityContext } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { provideAnimations } from '@angular/platform-browser/animations';
 import { provideRouter } from '@angular/router';
 
 import { appRoutes } from './app.routes';
+import { markedOptionsFactory } from './overhides';
 
 declare const Prism: any;
 function addAngularLanguageMarked() {
@@ -42,6 +43,10 @@ export const appConfig: ApplicationConfig = {
     provideHttpClient(),
     provideMarkdown({
       loader: HttpClient,
+      markedOptions: {
+        provide: MARKED_OPTIONS,
+        useFactory: markedOptionsFactory,
+      },
     }),
     provideAppInitializer(addAngularLanguageMarked),
     provideAnimations(),

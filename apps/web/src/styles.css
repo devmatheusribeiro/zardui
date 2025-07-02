@@ -167,11 +167,11 @@
   }
 }
 
-markdown {
+/* markdown {
   pre {
     @apply rounded-md border border-neutral-300/50 bg-neutral-200/30 dark:border-neutral-800/60 dark:bg-neutral-900/40;
   }
-}
+} */
 
 .api {
   h2 {
@@ -209,14 +209,14 @@ markdown {
   }
 
   table {
-    @apply w-full caption-bottom text-sm;
+    /* @apply w-full caption-bottom text-sm; */
 
     thead {
-      @apply [&_tr]:text-primary bg-accent;
+      /* @apply [&_tr]:text-primary bg-accent; */
     }
 
     tbody {
-      @apply [&_tr:last-child]:border-0 bg-accent/20;
+      /* @apply [&_tr:last-child]:border-0 bg-accent/20; */
     }
 
     tfoot {
@@ -224,24 +224,24 @@ markdown {
     }
 
     tr {
-      @apply border-b transition-colors hover:bg-muted/50;
+      /* @apply border-b transition-colors hover:bg-muted/50; */
     }
 
     th {
-      @apply h-12 px-4 text-left align-middle font-medium;
+      /* @apply h-12 px-4 text-left align-middle font-medium; */
     }
 
     td {
-      @apply p-4 align-middle;
+      /* @apply p-4 align-middle; */
 
       &:first-child {
         code {
-          @apply bg-blue-300/10 text-blue-500 dark:bg-blue-500/10 dark:text-blue-300;
+          /* @apply bg-blue-300/10 text-blue-500 dark:bg-blue-500/10 dark:text-blue-300; */
         }
       }
 
       code {
-        @apply bg-accent rounded-sm border-none font-sans;
+        /* @apply bg-accent rounded-sm border-none font-sans; */
       }
     }
 
@@ -251,14 +251,10 @@ markdown {
   }
 }
 
-pre {
-  @apply flex bg-gray-100 my-4 p-3;
+/* pre {
+  @apply flex my-4 p-3 rounded-md border border-neutral-300/50 bg-neutral-200/30 dark:border-neutral-800/60 dark:bg-neutral-900/40;
 
   code {
-    @apply bg-transparent border-none;
+    @apply mx-1 px-2 py-1 whitespace-nowrap bg-transparent border-none;
   }
-}
-
-code {
-  @apply mx-1 px-2 py-1 text-xs bg-muted border border-ring rounded whitespace-nowrap;
-}
+} */

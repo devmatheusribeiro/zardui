@@ -25,7 +25,7 @@ import { ClipboardButtonComponent } from '@zard/domain/components/clipboard-butt
       >
       </markdown>
     } @else {
-      <markdown class="api" #markdownEl [src]="src()" (ready)="onMarkdownReady()" [class]="classes()" ngPreserveWhitespaces> </markdown>
+      <markdown class="api" #markdownEl [src]="src()" ngPreserveWhitespaces></markdown>
     }
   `,
   host: {
